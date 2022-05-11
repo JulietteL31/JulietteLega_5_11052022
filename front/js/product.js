@@ -21,8 +21,6 @@ fetch("http://localhost:3000/api/products/" + productId)
     image.src = resultatAPI.imageUrl;
     document.querySelector('.item__img').appendChild(image);
     image.altTxt = resultatAPI.altTxt;
-    
-    console.log(image);
 
     // Ajout du prix
     document.querySelector("#price").innerHTML = resultatAPI.price;
