@@ -1,40 +1,35 @@
 fetch("http://localhost:3000/api/products/")
-.then(response => response.json())
-.catch(function(error) {
-  console.log(erreur);
-})
-.then(function (resultatAPI){
-  let articles = resultatAPI;
+    .then(response => response.json())
+    .catch(function(error) {
+        console.log("L'erreur est la suivante : " + error);
+    })
+    .then(function(resultatAPI) {
+        let articles = resultatAPI;
 
+        for (let article in articles) {
 
-  for (let article in articles){
+          console.log(resultatAPI[article])
+            let lien = document.createElement("a");
+            document.querySelector('.items').appendChild(lien);
+            // lien.href = `./product.html?id=${resultatAPI[article]._id}`;
+            lien.href = './product.html?id=' + resultatAPI[article]._id;
 
- let image = document.createElement("img");
- image.src = resultatAPI[article].imageUrl;
- image.altTxt = resultatAPI[article].altTxt + "," + resultatAPI[article].name;
+            let articleProduit = document.createElement("article")
+            lien.appendChild(articleProduit);
 
- console.log(image);
+            let image = document.createElement("img");
+            articleProduit.appendChild(image);
+            image.src = resultatAPI[article].imageUrl;
+            image.altTxt = resultatAPI[article].altTxt;
 
- let titre = document.createElement("h3");
- titre.classList.add("productName");
- titre.innerText = resultatAPI[article].name;
-
-let paragraphe = document.createElement("p");
-paragraphe.classList.add("productDescription");
-paragraphe.innerText = resultatAPI[article].description;
-
-let articleProduit = document.createElement("article");
-articleProduit.appendChild(image);
-articleProduit.appendChild(titre);
-articleProduit.appendChild(paragraphe);
-
-let lien = document.createElement("a");
-lien.href = "./product.html?id=42";
-lien.appendChild(articleProduit);
-
-let contain = document.getElementById("items");
-let container = contain.appendChild(lien);
-
-console.log(container);
-}
-})
+            let titre = document.createElement("h3");
+            articleProduit.appendChild(titre);
+            titre.classList.add("productName");
+            titre.innerText = resultatAPI[article].name;
+        
+            let paragraphe = document.createElement("p");
+            articleProduit.appendChild(paragraphe);
+            paragraphe.classList.add("productDescription");
+            paragraphe.innerText = resultatAPI[article].description;
+        }
+    })
