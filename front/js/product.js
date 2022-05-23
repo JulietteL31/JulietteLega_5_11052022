@@ -36,29 +36,51 @@ fetch("http://localhost:3000/api/products/" + productId)
       productColor.innerHTML = color;
     }
 
+
+
+
+    
+    // Récupérer les informations saisie par l'utilisateurs ( Couleurs / Qty )
+
+    let quantity = document.querySelector("#quantity");
+    quantity.addEventListener("change", function(event){
+        console.log(event.target.value);
+    });
+    
+    let color = document.querySelector("#colors");
+    color.addEventListener("change", function(event){
+        console.log(event.target.value);
+    })
+
+
     // Ajout d'une alerte au clic sur le bouton "Ajouter au panier"
     function clicBtnPanier(e) {
-        alert("Le produit a été ajouté au panier !");
+        if (quantity.value <= 0) {
+            alert("Veuillez sélectionner une quantité");
+        } else if (color.value = ""){
+            alert("Veuillez choisir un colori")
+        } else {
+            alert("Le produit a été ajouté au panier !");
+            localStorage.setItem("quantity", quantity);
+            localStorage.setItem("color", color);
+        }
     }
     
     let ajoutPanier = document.getElementById("addToCart");
     ajoutPanier.addEventListener("click", clicBtnPanier);
-  
-
-    // Récupérer les informations saisie par l'utilisateurs ( Couleurs / Qty )
-
-    document.querySelector("#quantity").addEventListener("change", function(event){
-        console.log(event.target.value);
-    });
-
-    document.querySelector("#colors").addEventListener("change", function(event){
-        console.log(event.target.value);
-    })
 
 
     // Gestion du Localstorage ( regarder comment cela fonctionne )
 
 
+
+    // localStorage.setItem("quantity", quantity);
+    // localStorage.setItem("color", color);
+
+    // for( let i = 0; i < localStorage.length; i++){
+    //     let liste = localStorage.key(i);
+    //     console.log(liste);
+    // }
 
 
 
