@@ -57,7 +57,8 @@ fetch("http://localhost:3000/api/products/" + productId)
           productColor: selectColor,
           productQuantity: selectQuantity,
           productImg: resultatAPI.imageUrl,
-          productPrice: resultatAPI.price,
+          productImgAltTxt: resultatAPI.altTxt,
+         // productPrice: resultatAPI.price,
         };
         console.table(articleInCart);
 
