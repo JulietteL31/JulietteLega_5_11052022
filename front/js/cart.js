@@ -70,18 +70,21 @@ input.addEventListener("input", (event) => {
 const addDeleteProduct = (id) => {
   const deleteItem = document.getElementById(id).querySelector(".deleteItem");
   deleteItem.addEventListener("click", function(e) {
-    let elementSuppr = e.target.closest(".cart__item");
-    elementSuppr.remove();
 
-    let id = elementSuppr.getAttribute("data-id");
-    let color = elementSuppr.getAttribute("data-color");
+    let elementSuppr = e.target.closest(".cart__item");
+    let id = elementSuppr.dataset.id;
+    let color = elementSuppr.dataset.color;
 
     for (let i = 0; i < panier.length; i++) {
       if (panier[i].productId === id && panier[i].productColor === color) {
-        localStorage.removeItem("product");
+        localStorage.removeItem(panier[i]);
       }
     }
+
+    // elementSuppr.remove();
+
     displayCart();
+
   })
 
   // Reload le DOM
@@ -99,14 +102,18 @@ fetch ("http://localhost:3000/api/products/")
 })
 .then (function(resultatAPI) {
 
-  let affichagePrix = document.querySelector(".cart__item").getAttribute("data-id");
+  let affichagePrix = document.querySelector(".cart__item").dataset.id;
+  console.log(affichagePrix);
 
-  for (let i = 0; i < resultatAPI.length; i++) {
-    if (affichagePrix === resultatAPI[i]._id) {
-      document.querySelector(".prix").innerHTML = resultatAPI[i].price + " €";
-    } else {
-      console.log("coucou");
-    }
+  let panier = JSON.parse(localStorage.getItem("product"));
+
+  for (let i = 0; i < panier.length; i++) {
+    const resultAPI = resultatAPI[i];
+      if (affichagePrix === resultAPI._id) {
+        document.querySelector(".prix").innerHTML = resultAPI.price * Number(panier[i].productQuantity) + " €";
+      } else {
+        console.log("coucou");
+      }
   }
 
 
@@ -138,3 +145,65 @@ displayCart();
 
 
 //Validation formulaire
+
+
+
+//Récupération des infos saisies
+let prenom = document.getElementById('firstName');
+prenom.addEventListener('change', function(e) {
+  console.log(prenom.value);
+})
+
+let nom = document.getElementById('lastName');
+nom.addEventListener("change", function(e) {
+  console.log(nom.value);
+})
+
+let adresse = document.getElementById('address');
+adresse.addEventListener('change', function(e) {
+  console.log(adresse.value);
+})
+
+let ville = document.getElementById('city');
+ville.addEventListener('change', function(e) {
+  console.log(ville.value);
+})
+
+let mail = document.getElementById('email');
+mail.addEventListener('change', function(e) {
+  console.log(mail.value);
+})
+
+let commande = document.getElementById('order');
+commande.addEventListener('click', function(e) {
+  let contact = {
+    firstName: prenom.value,
+    lastName: nom.value,
+    address: adresse.value,
+    city: ville.value,
+    email: mail.value
+  };
+
+  let contactLocalStorage = JSON.parse(localStorage.getItem("contact"));
+  contactLocalStorage = [];
+  contactLocalStorage.push(contact);
+  localStorage.setItem("contact", JSON.stringify(contactLocalStorage));
+
+  console.table(contactLocalStorage);
+
+
+  fetch("http://localhost:3000/api/order", {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json', 
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(contact)
+  })
+  .then(response => response.json())
+  .catch(function(err) {
+    console.log("La requête API a échoué");
+  })
+
+  alert("Votre commande a bien été validée !");
+});
