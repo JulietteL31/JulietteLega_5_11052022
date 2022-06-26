@@ -42,7 +42,7 @@ function displayCart(api, products) {
         <div class="cart__item__content__description">
           <h2>${produit.productName}</h2>
           <p>${produit.productColor}</p>
-          <p class="prix">${data.price} €</p>
+          <p class="prix">${data.price*Number(produit.productQuantity)} €</p>
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
@@ -70,7 +70,7 @@ function deleteItem(api, products){
   itemDelete.forEach((item) => {
 
     item.addEventListener('click', function (){
-      console.log('ici')
+      
       const product = item.closest("article")
       product.remove();
       const id = product.dataset.id;
@@ -124,14 +124,13 @@ for (let produit of products) {
 
 */
 
-function totalQty(api, products){
-  console.log(api);
-  console.log(products);
+function totalQty(){
+  let products = JSON.parse(localStorage.getItem("product"));
 
   let qty = 0;
 
   for (let produit of products) {
-
+    console.log(produit);
     qty += Number(produit.productQuantity);
 
     let affiche = document.getElementById('totalQuantity');
@@ -160,10 +159,10 @@ input.addEventListener("input", (event) => {
       panier[i].productQuantity = newQuantity;
       localStorage.setItem("product", JSON.stringify(panier));
       console.log(panier[i]);
-      totalQty(api, products);
-      totalPrice(api, products)
     }
   }
+  totalQty();
+  totalPrice(api)
 });
 }
 
@@ -198,24 +197,103 @@ const addDeleteProduct = (id) => {
  TODO :: Faire le reste des inputs.
 
 */
+//Validation Prénom
+let prenom = document.getElementById('firstName');
+prenom.addEventListener("input", function() {
+  validPrenom(this);
+});
 
+const validPrenom = function(inputPrenom) {
+  let prenomRegex = new RegExp("^[A-Z]{1}[a-z]+$|^[A-Z]{1}[a-z]+-[A-Z]{1}[a-z]+$|^[A-Z]+$|^[A-Z]+-[A-Z]+$|^[a-z]+$|^[a-z]+-[a-z]+$");
+
+  if (!prenomRegex.test(inputPrenom.value)) {
+    document.getElementById("firstNameErrorMsg").innerText = "Veuillez saisir un prénom valide (exemple : François)";
+    return false;
+  } else {
+    document.getElementById("firstNameErrorMsg").innerText = "";
+    return true;
+  }
+};
+
+
+//Validation Nom
+let nom = document.getElementById('lastName');
+nom.addEventListener("input", function() {
+  validNom(this);
+});
+
+const validNom = function(inputNom) {
+  let nomRegex = new RegExp("^[A-Z]{1}[a-z]+$|^[A-Z]{1}[a-z]+-[A-Z]{1}[a-z]+$|^[A-Z]+$|^[A-Z]+-[A-Z]+$|^[a-z]+$|^[a-z]+-[a-z]+$");
+
+  if (!nomRegex.test(inputNom.value)) {
+    document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un nom valide (exemple : Dupont)";
+    return false;
+  } else {
+    document.getElementById("lastNameErrorMsg").innerText = "";
+    return true;
+  }
+};
+
+
+//Validation addresse
+let adresse = document.getElementById('address');
+adresse.addEventListener("input", function() {
+  validAdresse(this);
+});
+
+const validAdresse = function(inputAdresse) {
+  let adresseRegex = new RegExp("^\d{1,4}[a-zA-Z]+\s[a-zA-Z]+$|^\d{1,4}[a-zA-Z]+\s[a-zA-Z]+\s[a-zA-Z]+$");
+
+  if (!adresseRegex.test(inputAdresse.value)) {
+    document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide (exemple : 33 rue des Oliviers)";
+    return false;
+  } else {
+    document.getElementById("addressErrorMsg").innerText = "";
+    return true;
+  }
+};
+
+
+
+//Validation ville
+let ville = document.getElementById('city');
+ville.addEventListener("input", function() {
+  validVille(this);
+});
+
+const validVille = function(inputVille) {
+  let villeRegex = new RegExp("^[A-Z]{1}[a-z]+$|^[A-Z]{1}[a-z]+-[A-Z]{1}[a-z]+$|^[A-Z]+$|^[A-Z]+-[A-Z]+$|^[a-z]+$|^[a-z]+-[a-z]+$");
+
+  if (!villeRegex.test(inputVille.value)) {
+    document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide (exemple : Paris)";
+    return false;
+  } else {
+    document.getElementById("cityErrorMsg").innerText = "";
+    return true;
+  }
+};
+
+
+
+//Validation email
 let email = document.getElementById("email");
 email.addEventListener("input", function () {
   validEmail(this);
 });
 
 const validEmail = function (inputEmail) {
-  let emailRegex = new RegExp("^[A-Za-z-_]+@[A-Za-z]+.[A-Za-z]+$");
+  let emailRegex = new RegExp("^.+@[a-z]+\.[a-z]{2,3}$");
 
   if (!emailRegex.test(inputEmail.value)) {
     document.getElementById("emailErrorMsg").innerText =
-      "Exemple : contact@kanap.fr";
+      "Veuillez saisir un email valide (exemple : contact@kanap.fr)";
     return false;
   } else {
     document.getElementById("emailErrorMsg").innerText = "";
     return true;
   }
 };
+
 
 /* 
  
