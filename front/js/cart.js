@@ -315,7 +315,7 @@ commande.addEventListener("click", function (e) {
 
   if (products === null || products.length < 1) {
     alert("Le panier est vide");
-  } else if (validEmail(email)) {
+  } else if (validPrenom(prenom)) || (validNom(nom)) || (validAdresse(adresse)) || (validVille(ville)) || (validEmail(email)) {
     const productsId = [];
 
     products.forEach((product) => {
