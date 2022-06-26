@@ -242,10 +242,11 @@ adresse.addEventListener("input", function() {
 });
 
 const validAdresse = function(inputAdresse) {
-  let adresseRegex = new RegExp("^\d{1,4}[a-zA-Z]+\s[a-zA-Z]+$|^\d{1,4}[a-zA-Z]+\s[a-zA-Z]+\s[a-zA-Z]+$");
+  let adresseRegex = new RegExp("^([0-9]*) ?([a-zA-Z,\.\' ]*)$");
 
   if (!adresseRegex.test(inputAdresse.value)) {
     document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide (exemple : 33 rue des Oliviers)";
+    console.log(inputAdresse.value);
     return false;
   } else {
     document.getElementById("addressErrorMsg").innerText = "";
@@ -315,7 +316,7 @@ commande.addEventListener("click", function (e) {
 
   if (products === null || products.length < 1) {
     alert("Le panier est vide");
-  } else if (validPrenom(prenom)) || (validNom(nom)) || (validAdresse(adresse)) || (validVille(ville)) || (validEmail(email)) {
+  } else if (validPrenom(prenom) || validNom(nom) || validAdresse(adresse) || validVille(ville) || validEmail(email)) {
     const productsId = [];
 
     products.forEach((product) => {
@@ -325,16 +326,19 @@ commande.addEventListener("click", function (e) {
 
     const order = {
       contact: {
-        firstName: "prenom",
-        lastName: "nom",
-        address: "adresse",
-        city: "ville",
+        firstName: prenom.value,
+        lastName: nom.value,
+        address: adresse.value,
+        city: ville.value,
         email: email.value,
       },
       products: productsId,
     };
 
     orderProduct(order);
+    alert(order);
+  } else {
+    alert("Champs invalides");
   }
 
   function orderProduct(order) {
