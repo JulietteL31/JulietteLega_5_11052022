@@ -78,14 +78,15 @@ function deleteItem(api, products){
 
      
       if(products.some((e) => e.productId === id && e.productColor === color)){
-        let obj = products.findIndex((product) => product.id === productId && product.color === productColor);
+        let obj = products.findIndex((product) => product.id === product.productId && product.color === product.productColor);
         products.splice(obj, 1);
          let productJson = JSON.stringify(products);
         localStorage.setItem('product', productJson)
-
-        totalQty(products);
-        totalPrice(resultatAPI, products)
       }
+      // let products = JSON.parse(localStorage.getItem("product"));
+      displayCart(api, products);
+      totalQty(products);
+      totalPrice(api, products);
     })
   })
 };
@@ -161,8 +162,9 @@ input.addEventListener("input", (event) => {
       console.log(panier[i]);
     }
   }
+  let products = JSON.parse(localStorage.getItem("product"));
   totalQty();
-  totalPrice(api)
+  totalPrice(api, products)
 });
 }
 
@@ -242,7 +244,7 @@ adresse.addEventListener("input", function() {
 });
 
 const validAdresse = function(inputAdresse) {
-  let adresseRegex = new RegExp("^([0-9]*) ?([a-zA-Z,\.\' ]*)$");
+  let adresseRegex = new RegExp("^([0-9]*) ?([a-zA-Z,\. ]*)$");
 
   if (!adresseRegex.test(inputAdresse.value)) {
     document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide (exemple : 33 rue des Oliviers)";
