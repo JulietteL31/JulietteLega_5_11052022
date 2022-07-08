@@ -83,7 +83,7 @@ function deleteItem(api, products){
          let productJson = JSON.stringify(products);
         localStorage.setItem('product', productJson)
       }
-      displayCart(api, products);
+      // displayCart(api, products);
       totalQty(products);
       totalPrice(api, products);
     })
