@@ -4,7 +4,7 @@ console.table(panier);
 
 /* 
 
-  RECUPERATION DES PRODUITS DEPUIS L'API
+  RECUPERATION DES PRODUITS DEPUIS L'API + APPEL DE TOUTES LES FONCTIONS D'AFFICHAGE DEFINIES PLUS BAS
 
 */
 fetch("http://localhost:3000/api/products/")
@@ -22,6 +22,7 @@ fetch("http://localhost:3000/api/products/")
     updateQty(resultatAPI, products);
 
   });
+
 
 
 /* 
@@ -42,7 +43,7 @@ function displayCart(api, products) {
         <div class="cart__item__content__description">
           <h2>${produit.productName}</h2>
           <p>${produit.productColor}</p>
-          <p class="prix">${data.price*Number(produit.productQuantity)} €</p>
+          <p class="prix">${data.price} €</p>
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
@@ -59,7 +60,6 @@ function displayCart(api, products) {
         document
           .getElementById("cart__items")
           .insertAdjacentHTML("beforeend", produitPanier);
-        // addDeleteProduct(produit.productId);
       }
     }
   }
@@ -83,7 +83,6 @@ function deleteItem(api, products){
          let productJson = JSON.stringify(products);
         localStorage.setItem('product', productJson)
       }
-      // let products = JSON.parse(localStorage.getItem("product"));
       displayCart(api, products);
       totalQty(products);
       totalPrice(api, products);
@@ -115,8 +114,6 @@ for (let produit of products) {
     }
   }
 }
-
-
 }
 
 /*
@@ -145,7 +142,7 @@ function totalQty(){
 
 /* 
 
-  MODIFICATION DES QUANTITES = OK 
+  MODIFICATION DES QUANTITES 
 
 */
 function updateQty(api, products){
@@ -194,9 +191,7 @@ const addDeleteProduct = (id) => {
 
 /* 
 
- VALIDATION DES INPUTS : 
-
- TODO :: Faire le reste des inputs.
+ VALIDATION DES INPUTS (EN DIRECT) ET AFFICHAGE MESSAGES D'ERREUR
 
 */
 //Validation Prénom
@@ -244,7 +239,7 @@ adresse.addEventListener("input", function() {
 });
 
 const validAdresse = function(inputAdresse) {
-  let adresseRegex = new RegExp("^([0-9]*) ?([a-zA-Z,\. ]*)$");
+  let adresseRegex = new RegExp("^[0-9]{1,5} [A-Za-z -]+$");
 
   if (!adresseRegex.test(inputAdresse.value)) {
     document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide (exemple : 33 rue des Oliviers)";
@@ -298,15 +293,10 @@ const validEmail = function (inputEmail) {
 };
 
 
-/* 
- 
- FIN DE LA VALIDATION DES INPUTS 
-
-*/
 
 /* 
 
-  VALIDATION DE LA COMMANDE  / AVEC VERIFICATION DES INPUTS LORS DU CLICK SUR COMMANDER
+  VALIDATION DE LA COMMANDE AVEC VERIFICATION DES INPUTS LORS DU CLICK SUR COMMANDER
 
 */
 
@@ -318,7 +308,7 @@ commande.addEventListener("click", function (e) {
 
   if (products === null || products.length < 1) {
     alert("Le panier est vide");
-  } else if (validPrenom(prenom) || validNom(nom) || validAdresse(adresse) || validVille(ville) || validEmail(email)) {
+  } else if (validPrenom(prenom) && validNom(nom) && validAdresse(adresse) && validVille(ville) && validEmail(email)) {
     const productsId = [];
 
     products.forEach((product) => {
@@ -338,10 +328,15 @@ commande.addEventListener("click", function (e) {
     };
 
     orderProduct(order);
-    alert(order);
+    console.log(order)
   } else {
     alert("Champs invalides");
   }
+
+
+    
+  // FONCTION QUI ENVOIE LES DONNEES UTILISATEURS A L'API ET VIDE LE LOCAL STORAGE APRES COMMANDE
+  
 
   function orderProduct(order) {
     fetch("http://localhost:3000/api/products/order", {
@@ -359,12 +354,12 @@ commande.addEventListener("click", function (e) {
       })
       .then(function (value) {
         console.log(value.orderId);
-        window.location = `./confirmation.html?orderId=${value.orderId}`;
+       window.location = `./confirmation.html?orderId=${value.orderId}`;
         //vider le localstorage
-        localStorage.clear();
+       localStorage.clear();
       })
       .catch(function (err) {
-        console.log("La requête API a échoué");
+        console.log(err + "La requête API a échoué");
       });
   }
 });

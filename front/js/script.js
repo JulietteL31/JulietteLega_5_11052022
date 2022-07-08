@@ -1,3 +1,9 @@
+/*
+
+RECUPERATION DES DONNEES VIA L'API
+
+*/
+
 fetch("http://localhost:3000/api/products/")
     .then(response => response.json())
     .catch(function(error) {
@@ -6,9 +12,12 @@ fetch("http://localhost:3000/api/products/")
     .then(function(resultatAPI) {
         let articles = resultatAPI;
 
+        // Pour chaque article de la liste "resultatAPI"/"articles"
         for (let article in articles) {
 
           console.log(resultatAPI[article])
+
+            // Affichage des éléments dans le DOM
             let lien = document.createElement("a");
             document.querySelector('.items').appendChild(lien);
             // lien.href = `./product.html?id=${resultatAPI[article]._id}`;
