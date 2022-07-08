@@ -65,31 +65,6 @@ function displayCart(api, products) {
   }
 }
 
-function deleteItem(api, products){
-  const itemDelete = document.querySelectorAll('.deleteItem');
-  itemDelete.forEach((item) => {
-
-    item.addEventListener('click', function (){
-      
-      const product = item.closest("article")
-      product.remove();
-      const id = product.dataset.id;
-      const color = product.dataset.color;
-
-     
-      if(products.some((e) => e.productId === id && e.productColor === color)){
-        let obj = products.findIndex((product) => product.id === product.productId && product.color === product.productColor);
-        products.splice(obj, 1);
-         let productJson = JSON.stringify(products);
-        localStorage.setItem('product', productJson)
-      }
-      // displayCart(api, products);
-      totalQty(products);
-      totalPrice(api, products);
-    })
-  })
-};
-
 
 /* 
 
@@ -170,23 +145,27 @@ input.addEventListener("input", (event) => {
   SUPPRESION DES PRODUITS 
 
 */
-const addDeleteProduct = (id) => {
-  const deleteItem = document.getElementById(id).querySelector(".deleteItem");
-  deleteItem.addEventListener("click", function (e) {
-    let elementSuppr = e.target.closest(".cart__item");
-    let id = elementSuppr.dataset.id;
-    let color = elementSuppr.dataset.color;
+function deleteItem(api, products) {
+  const itemDelete = document.querySelectorAll('.deleteItem');
+  itemDelete.forEach((item) => {
+      item.addEventListener('click', function () {
+          const product = item.closest("article");
+          const idItem = product.dataset.id;
+          const colorItem = product.dataset.color;
 
-    for (let i = 0; i < panier.length; i++) {
-      if (panier[i].productId === id && panier[i].productColor === color) {
-        localStorage.removeItem(panier[i]);
-      }
-    }
-
-  });
-
+          let produitLocalStorage = products.filter(
+              (p) => p.productId !== idItem || p.productColor !== colorItem
+          );
+          localStorage.setItem("product", JSON.stringify(produitLocalStorage));
+          location.reload();
+          totalQty(products);
+          totalPrice(api, products);
+      })
+  })
 
 };
+
+
 
 
 /* 
